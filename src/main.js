@@ -1,18 +1,19 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import './registerServiceWorker'
-import Dexie from 'dexie';
+import { register } from 'register-service-worker'
 
-const db = new Dexie('myDatabase');
-db.version(1).stores({
-  formData: '++id,name,email'
-});
+register('/sw.js')
 
-db.formData.add({
-    name: this.formData.name,
-    email: this.formData.email
-  }).then(() => {
-    console.log('Data saved to IndexedDB');
-  });
+const app = createApp(App)
 
-createApp(App).mount('#app')
+// Přidejte následující řádek pro povolení PWA režimu
+app.config.productionTip = false
+
+// Přidejte následující řádek pro nastavení názvu a ikony aplikace
+app.config.globalProperties.$pwa = {
+  name: 'Moje PWA aplikace',
+  icon: '/img/icons/android-chrome-192x192.png',
+}
+
+app.mount('#app')
